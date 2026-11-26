@@ -16,5 +16,75 @@ processes:
 files: []
 mods:
   layout:
-    - BepInEx/plugins
-  items: []
+    - .doorstop_version
+    - doorstop_config.ini
+    - steam_appid.txt
+    - winhttp.dll
+    - BepInEx/config/BepInEx.cfg
+    - BepInEx/core
+    - BepInEx/patchers/.tobey.bepinex.pack
+    - BepInEx/plugins/.tobey.bepinex.pack
+    - BepInEx/plugins/Nautilus
+    - BepInEx/plugins/QuickSlotsPlus
+    - BepInEx/plugins/BlueprintSearchBar
+  items:
+    - id: bepinex
+      name: Tobey's BepInEx Pack for Subnautica
+      version: 5.4.23-pack.3.1.1
+      source:
+        type: github
+        repo: toebeann/BepInEx.Subnautica
+        asset: Tobey.s.BepInEx.Pack.for.Subnautica.zip
+        url: >-
+          https://github.com/toebeann/BepInEx.Subnautica/releases/download/v5.4.23-pack.3.1.1/Tobey.s.BepInEx.Pack.for.Subnautica.zip
+      sha256: 21a1fd6ec22253a6cf05ccf1f6407f6055c95971a7dda7545b33481069a4dd3e
+      license: ISC pack tooling, MIT and LGPL-3.0 components.
+      distribute: link
+      risk: injector
+      notes: Preconfigured Windows loader for Subnautica.
+    - id: nautilus
+      name: Nautilus
+      version: 1.0.0-pre.57
+      source:
+        type: github
+        repo: SubnauticaModding/Nautilus
+        asset: Nautilus_SN.STABLE_1.0.0.57.zip
+        url: >-
+          https://github.com/SubnauticaModding/Nautilus/releases/download/1.0.0-pre.57/Nautilus_SN.STABLE_1.0.0.57.zip
+      sha256: 72460dea2c669838d0f05f882fbeca6c82891d39507f1a27f46618d100cbc82a
+      license: GPL-3.0
+      distribute: link
+      requires: [bepinex]
+      notes: Original Subnautica edition for the post-2025 patch branch.
+    - id: quick-slots-plus
+      name: Quick Slots Plus
+      version: 3.2.0
+      source:
+        type: github
+        repo: celvro/QuickSlotsPlus
+        asset: QuickSlotsPlus-3.2.0.zip
+        url: >-
+          https://github.com/celvro/QuickSlotsPlus/releases/download/v3.2.0/QuickSlotsPlus-3.2.0.zip
+      sha256: 9624a5f2bf8553444c33c45a49766b5629aa661b279b3f9dae1d65da593ba829
+      license: MIT
+      distribute: link
+      requires: [bepinex, 'nautilus@>=1.0.0-pre.46']
+      notes: Adds configurable quick slots and hotkeys for tools.
+    - id: blueprint-search-bar
+      name: Blueprint Search Bar
+      version: 1.1.0
+      source:
+        type: github
+        repo: 32Kallies/SubnauticaMods
+        asset: BlueprintSearchBar-1.1.0.zip
+        url: >-
+          https://github.com/32Kallies/SubnauticaMods/releases/download/BlueprintSearchBar/1.1.0/BlueprintSearchBar-1.1.0.zip
+      sha256: aab28bc113c592519d4f8a1b76bb1ede3a671c15343d0d5ab011d26b05bcdb52
+      license: Upstream download only. The author prohibits rehosting.
+      distribute: link
+      requires: [bepinex]
+      notes: Adds a search field to the PDA Blueprints tab.
+notes:
+  general: >-
+    Windows Steam Vanilla+ pack for build 20241558.
+    Prepare downloads with docs/prepare-mods.ps1.

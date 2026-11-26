@@ -2,21 +2,53 @@
 
 [Deutsch](README.de.md)
 
-The [game manifest](game.yml) describes the original [Subnautica on Steam](https://store.steampowered.com/app/264710/Subnautica/) (app ID `264710`). The local Windows installation contains `Subnautica.exe` and Steam reports build `20241558`.
+Vanilla+ for the original [Subnautica on Steam](https://store.steampowered.com/app/264710/Subnautica/) on Windows, targeting build `20241558`. The [game manifest](game.yml) pins the four upstream downloads and their SHA-256 hashes. The downloads and file layout have been verified. The pack still needs an in-game check on this build.
 
-The installation had no BepInEx or QMods folder. The mod-manager locations and downloads checked contained no Subnautica mods, and no loader log was available to confirm active plugins. The manifest starts with an empty mod list.
+| Component                                                                                                 | Version           | Purpose                                          |
+| --------------------------------------------------------------------------------------------------------- | ----------------- | ------------------------------------------------ |
+| [Tobey's BepInEx Pack](https://github.com/toebeann/BepInEx.Subnautica/releases/tag/v5.4.23-pack.3.1.1)    | 5.4.23-pack.3.1.1 | Loads Windows plugins.                           |
+| [Nautilus](https://github.com/SubnauticaModding/Nautilus/releases/tag/1.0.0-pre.57)                       | 1.0.0-pre.57      | Modding library required by Quick Slots Plus.    |
+| [Quick Slots Plus](https://github.com/celvro/QuickSlotsPlus/releases/tag/v3.2.0)                          | 3.2.0             | Adds configurable hotbar slots and key bindings. |
+| [Blueprint Search Bar](https://github.com/32Kallies/SubnauticaMods/releases/tag/BlueprintSearchBar/1.1.0) | 1.1.0             | Filters blueprints in the PDA.                   |
 
-## Set up mods on Windows
+## Install on Windows
 
-1. In Steam, open **Subnautica → Manage → Browse local files** to find the folder containing `Subnautica.exe`. With the game closed, follow the [BepInEx pack's Windows instructions](https://github.com/toebeann/BepInEx.Subnautica#manual-installation).
-2. Install the dependencies for your chosen mods. If a mod requires Nautilus, use the release for the original Subnautica and your Steam branch. See the [Nautilus installation guide](https://github.com/SubnauticaModding/Nautilus#installation).
-3. Install each mod according to its author's instructions. BepInEx plugins usually go into `BepInEx/plugins/`. Start the game through Steam and check `BepInEx/LogOutput.log` for plugin loading and errors before opening your main save.
+Use PowerShell from the unpacked release folder with a `gco-install.exe` that supports `--mod-payloads`. Close the game before installing. If the game already has mods, check for overlapping BepInEx or plugin installations before applying the pack.
 
-## Optional Vanilla+ starting point
+1. Download, verify and stage the files in a new `mod-payloads` folder. [Staging script](docs/prepare-mods.ps1)
 
-Quick Slots Plus adds more hotbar slots and requires BepInEx and Nautilus. Compatibility with Steam build `20241558` remains untested. [Quick Slots Plus (BepInEx)](https://www.nexusmods.com/subnautica/mods/984?tab=description)
+   ```powershell
+   .\docs\prepare-mods.ps1
+   ```
 
-## Build the inventory
+2. Preview the files the installer will write to the Steam game folder.
+
+   ```powershell
+   .\gco-install.exe install --manifest .\game.yml --mod-payloads .\mod-payloads --dry-run
+   ```
+
+3. Apply the pack with backups.
+
+   ```powershell
+   .\gco-install.exe install --manifest .\game.yml --mod-payloads .\mod-payloads
+   ```
+
+4. Launch Subnautica through Steam. Check `BepInEx/LogOutput.log` for the three plugins. In a test save, try an extra quick slot and search for a known blueprint in the PDA.
+
+To undo the installation, close the game and run `.\gco-install.exe restore --manifest .\game.yml`.
+
+### Staging layout
+
+Each mod ID sits directly under `mod-payloads/`. Its files use paths relative to the folder containing `Subnautica.exe`.
+
+| Mod ID                 | Staged paths under the mod ID                                                                                  |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `bepinex`              | `BepInEx/`, `.doorstop_version`, `doorstop_config.ini`, `steam_appid.txt`, `winhttp.dll` from the archive root |
+| `nautilus`             | `BepInEx/plugins/Nautilus/` from `plugins/Nautilus/`                                                           |
+| `quick-slots-plus`     | `BepInEx/plugins/QuickSlotsPlus/` as shipped                                                                   |
+| `blueprint-search-bar` | `BepInEx/plugins/BlueprintSearchBar/` from `plugins/BlueprintSearchBar/`                                       |
+
+## Build the release
 
 Run these commands with Node.js 24.
 
@@ -24,7 +56,8 @@ Run these commands with Node.js 24.
 npm ci
 npm run validate
 npm test
+npm run format:check -- --end-of-line auto
 npm run build
 ```
 
-The build writes `dist/MODS.md` and includes the manifest in `dist/fullrelease.zip`. This starter contains no mod or config payloads.
+The build writes `dist/MODS.md` with the upstream links and includes the manifest and staging script in `dist/fullrelease.zip`. Mod binaries are downloaded directly from the authors at setup time.

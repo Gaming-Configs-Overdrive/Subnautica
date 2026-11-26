@@ -11,6 +11,7 @@ This file is based on the Semver-Model ('Added', 'Changed', 'Removed')
 ### Added
 
 - Add a Subnautica Steam manifest and document the local mod inventory and manual BepInEx setup in English and German.
+- Add Quick Slots Plus and Blueprint Search Bar with pinned Windows downloads for BepInEx and Nautilus and a staging script that checks all four SHA-256 hashes.
 
 ## [2.0.0] - 2026-11-12
 
