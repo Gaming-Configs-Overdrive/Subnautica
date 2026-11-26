@@ -1,7 +1,20 @@
 # Game manifest, see docs/GAME_MANIFEST.md and schema/game.schema.json.
 # yaml-language-server: $schema=./schema/game.schema.json
+---
 schema: 1
-id: example-game
-name: Example Game
+id: subnautica
+name: Subnautica
 online: false
+stores:
+  steam:
+    appid: 264710
+detect:
+  exe: Subnautica.exe
+processes:
+  - Subnautica
+  - Subnautica32
 files: []
+mods:
+  layout:
+    - BepInEx/plugins
+  items: []

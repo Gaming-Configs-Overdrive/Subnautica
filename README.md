@@ -1,77 +1,30 @@
-# Game Config Skeleton
+# Subnautica
 
-> [Deutsche Readme Version hier](./README.de.md)
+[Deutsch](README.de.md)
 
-<!-- TEMPLATE START -->
+The [game manifest](game.yml) describes the original [Subnautica on Steam](https://store.steampowered.com/app/264710/Subnautica/) (app ID `264710`). The local Windows installation contains `Subnautica.exe` and Steam reports build `20241558`.
 
-Template repository for game configs and mod packs of the
-[Gaming-Configs-Overdrive](https://github.com/Gaming-Configs-Overdrive) org. Each
-game repo describes its config files and mods in `game.yml`; the build validates
-it and packs release ZIPs, the installer `gco-install` applies them.
+The installation had no BepInEx or QMods folder. The mod-manager locations and downloads checked contained no Subnautica mods, and no loader log was available to confirm active plugins. The manifest starts with an empty mod list.
 
-## Features
+## Set up mods on Windows
 
-- One manifest per game: [`game.yml`](./game.yml), validated against [`schema/game.schema.json`](./schema/game.schema.json).
-- Plain Node build (`npm run build`), no bundler.
-- Release ZIPs with checksums (`SHA256SUMS`) and a `MODS.md` mod list.
-- `fullrelease.zip` ships the installer `gco-install` (added by the release workflow).
-- Thin CI callers for the org's reusable workflows (lint, release, pages, template sync).
+1. In Steam, open **Subnautica → Manage → Browse local files** to find the folder containing `Subnautica.exe`. With the game closed, follow the [BepInEx pack's Windows instructions](https://github.com/toebeann/BepInEx.Subnautica#manual-installation).
+2. Install the dependencies for your chosen mods. If a mod requires Nautilus, use the release for the original Subnautica and your Steam branch. See the [Nautilus installation guide](https://github.com/SubnauticaModding/Nautilus#installation).
+3. Install each mod according to its author's instructions. BepInEx plugins usually go into `BepInEx/plugins/`. Start the game through Steam and check `BepInEx/LogOutput.log` for plugin loading and errors before opening your main save.
 
-## Getting Started
+## Optional Vanilla+ starting point
 
-1. Create a repo with "Use this template" and clone it.
-2. Replace this `README.md` with `README.template.md` and customize it (also `README.de.md`).
-3. Install dependencies (Node 24, see `.nvmrc`):
-   ```bash
-   npm install
-   ```
-4. Edit `game.yml` (see [docs/GAME_MANIFEST.md](./docs/GAME_MANIFEST.md)).
-5. Add config files in `configs/` and bundled mods in `mods/<mod-id>/` (paths relative to the game root).
-6. Write documentation in `docs/`.
-7. Validate and build:
-   ```bash
-   npm run validate
-   npm run build
-   ```
-8. Add a `## [x.y.z]` section to `CHANGELOG.md`; a push to `main` releases it.
+Quick Slots Plus adds more hotbar slots and requires BepInEx and Nautilus. Compatibility with Steam build `20241558` remains untested. [Quick Slots Plus (BepInEx)](https://www.nexusmods.com/subnautica/mods/984?tab=description)
 
-## Build Output (`dist/`)
+## Build the inventory
 
-| File              | Content                                                                 |
-| ----------------- | ----------------------------------------------------------------------- |
-| `config.zip`      | Contents of `configs/` for manual installation.                         |
-| `modpack.zip`     | All bundled mods merged, relative to the game root.                     |
-| `fullrelease.zip` | `game.yml`, `configs/`, `mods/`, `docs/` (+ installer in releases).     |
-| `MODS.md`         | All mods with version, source, license; `link` mods must be downloaded. |
-| `SHA256SUMS`      | Checksums in `sha256sum` format.                                        |
+Run these commands with Node.js 24.
 
-## Installing a Release
+```sh
+npm ci
+npm run validate
+npm test
+npm run build
+```
 
-1. Download and extract `fullrelease.zip` from the releases.
-2. Run `install.bat` (Windows) or `install.sh` (Linux), or call the installer directly:
-   ```bash
-   gco-install install --variant <variant> --dry-run
-   gco-install install --variant <variant>
-   ```
-3. Undo with `gco-install restore`.
-
-## Folder Structure
-
-- `configs/`: Game config files referenced by `game.yml`.
-- `mods/`: Bundled mods, `mods/<mod-id>/<path relative to game root>`.
-- `docs/`: Documentation; [ARCHITECTURE.md](./docs/ARCHITECTURE.md) is the shared contract, [GAME_MANIFEST.md](./docs/GAME_MANIFEST.md) the manifest reference.
-- `schema/`: JSON schema for `game.yml`.
-- `scripts/`: Build and validation scripts.
-- `test/`: Tests (`npm test`).
-
-## Additional Notes
-
-- You can provide README files in multiple languages by following the format `README.[tld].md`, where `[tld]` is the language code (e.g., `README.de.md` for German).
-- Please ensure that all language-specific READMEs are linked in the main `README.md` file.
-- `npm run format` formats all files with Prettier.
-
-<!-- TEMPLATE END -->
-
-## License
-
-MIT
+The build writes `dist/MODS.md` and includes the manifest in `dist/fullrelease.zip`. This starter contains no mod or config payloads.

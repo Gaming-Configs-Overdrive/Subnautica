@@ -8,6 +8,10 @@ This file is based on the Semver-Model ('Added', 'Changed', 'Removed')
 
 ## [Unreleased]
 
+### Added
+
+- Add a Subnautica Steam manifest and document the local mod inventory and manual BepInEx setup in English and German.
+
 ## [2.0.0] - 2026-11-12
 
 ### Changed
